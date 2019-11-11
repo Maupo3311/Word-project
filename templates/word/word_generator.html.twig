@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Генератор слов{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <br><br>
+        <form id="generator_form" style="width: 50%; margin-left: 25%" method="post" action="{{ path('word_get_by_chars') }}">
+            <div class="form-group">
+                <label for="generator_form_chars">Символы</label>
+                <input name="chars" type="text" class="form-control" id="generator_form_chars" placeholder="Символы...">
+                <small id="emailHelp" class="form-text text-muted">Введите символы из которых вам нужно сгенерировать слова</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Подобрать</button>
+        </form>
+
+        <div id="generator_response"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/word/WordGenerator.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,16 @@
+<div class="row" style="width: 70%; font-size: 20px; text-align: center; font-weight: bold; margin-top: 40px; margin-left: 15%">
+    <div style="width: 49.5%; border-right: 1px solid #c4c4c4; border-left: 1px solid #c4c4c4">
+        {% for word in words %}
+            {% if loop.index0 % 2 == 0 %}
+                <p>{{ word }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div style="width: 49.5%; border-left: 1px solid #c4c4c4; border-right: 1px solid #c4c4c4;">
+        {% for word in words %}
+            {% if loop.index0 % 2 != 0 %}
+                <p>{{ word }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
