@@ -1,0 +1,11 @@
+ <div class="row" id="words_for_generate">
+     {% for word in words %}
+         <div class="row_for_word">
+             <span class="row word_for_generate" data-word="{{ word.name }}">
+                 {% for char in word.name|split('') %}
+                     <span data-number="{{ loop.index0 }}" class="cell">{{ char }}</span>
+                 {% endfor %}
+             </span>
+         </div>
+     {% endfor %}
+ </div>

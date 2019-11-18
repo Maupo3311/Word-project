@@ -1,0 +1,35 @@
+#crossword_widget {
+    width: 70%;
+    padding: 20px;
+}
+#crossword_options {
+    padding: 20px;
+    width: 29.5%;
+    border-left: 1px solid #cccccc;
+    max-height: 80vh;
+    overflow: scroll;
+}
+.crossword {
+    width: 100%;
+}
+.cell {
+    height: 40px;
+    width: 40px;
+    font-size: 23px;
+    text-align: center;
+    border: 1px solid white;
+    background: rgba(64, 255, 50, 0.15);
+}
+.place_for_cell {
+    border: 1px solid black;
+    height: 40px;
+    width: 40px;
+}
+.word_for_generate {
+    margin-left: 10px;
+    cursor: pointer;
+    width: 80%;
+}
+.row_for_word {
+    width: 100%;
+}

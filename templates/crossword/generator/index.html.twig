@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Генерация кроссворда{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crossword/crosswordGenerator.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div id="crossword_widget">
+
+            </div>
+            <div id="crossword_options">
+                <form id="crossword_generator_form">
+                    <div class="form-group">
+                        <label for="crossword_lvl">Уровень</label>
+                        <input type="number" step="1" class="form-control" id="crossword_lvl" placeholder="Введите уровень кроссворда">
+                    </div>
+                    <div class="form-group">
+                        <label for="crossword_width">Клеток в ширину</label>
+                        <input type="number" step="1" class="form-control" id="crossword_width" placeholder="Введите количество клеток в ширину">
+                    </div>
+                    <div class="form-group">
+                        <label for="crossword_height">Клеток в высоту</label>
+                        <input type="number" step="1" class="form-control" id="crossword_height" placeholder="Введите количество клеток в высоту">
+                    </div>
+                    <div class="form-group">
+                        <label for="crossword_chars">Символы для слов</label>
+                        <input type="text" class="form-control" id="crossword_chars" placeholder="Введите символы">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Расставить слова</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/crossword/CrosswordGenerator.js') }}"></script>
+{% endblock %}

@@ -14,7 +14,7 @@ class WordGenerator {
         $(document).on('submit', this.selectorGeneratorForm, e => {
             e.preventDefault();
             var chars = $(this.selectorGeneratorFormChars).val();
-            this.getWordByChars(chars);
+            this.getWordWithTemplateByChars(chars);
         })
     };
 
@@ -22,14 +22,14 @@ class WordGenerator {
      *               Functions
      *****************************************/
 
-    getWordByChars = chars => {
+    getWordWithTemplateByChars = chars => {
         var query = '?chars=' + chars;
 
-        $.get(Routing.generate('word_get_by_chars') + query)
+        $.get(Routing.generate('word_get_by_chars_template') + query)
             .done(response => {
                 $(this.selectorGeneratorResponse).html(response);
         });
-    }
+    };
 }
 
 var wordGenerator = new WordGenerator();

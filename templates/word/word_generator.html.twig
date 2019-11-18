@@ -2,10 +2,15 @@
 
 {% block title %}Генератор слов{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/word/wordGenerator.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <br><br>
-        <form id="generator_form" style="width: 50%; margin-left: 25%" method="post" action="{{ path('word_get_by_chars') }}">
+        <form id="generator_form" style="width: 50%; margin-left: 25%" method="post">
             <div class="form-group">
                 <label for="generator_form_chars">Символы</label>
                 <input name="chars" type="text" class="form-control" id="generator_form_chars" placeholder="Символы...">

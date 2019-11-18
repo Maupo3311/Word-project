@@ -11,16 +11,19 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+    Api\:
+        resource: '../src/Api/*'
 
-    # controllers are imported separately to make sure services can be injected
-    # as action arguments even if you don't extend any base controller class
+    Api\Controller\:
+        resource: '../src/Api/Controller'
+        tags: ['controller.service_arguments']
+
+    App\:
+        resource: '../src/App/*'
+        #        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
     App\Controller\:
-        resource: '../src/Controller'
+        resource: '../src/App/Controller'
         tags: ['controller.service_arguments']
 
     App\Command\WriteOffDictionaryCommand:
@@ -42,3 +45,8 @@ services:
       class: 'App\Service\WordService'
       arguments: ['@doctrine.orm.default_entity_manager']
       public: true
+
+    app.crossword_generator_service:
+        class: 'App\Service\CrosswordGeneratorService'
+        arguments: ['%kernel.project_dir%', '@doctrine.orm.default_entity_manager']
+        public: true
