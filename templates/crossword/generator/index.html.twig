@@ -10,11 +10,18 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div id="crossword_widget">
-
+            <div id="crossword_widget"></div>
+            <div id="crossword_word_form" class="crossword_options">
+                <div>
+                    <button class="btn btn-primary" id="open_crossword_menu" type="button">Меню кроссворда</button>
+                </div>
+                <br>
             </div>
-            <div id="crossword_options">
+            <div id="crossword_form" class="crossword_options">
                 <form id="crossword_generator_form">
+                    <div class="button_panel">
+                        <button class="btn btn-primary" id="open_word_menu" type="button">Меню слов</button>
+                    </div>
                     <div class="form-group">
                         <label for="crossword_lvl">Уровень</label>
                         <input type="number" step="1" class="form-control" id="crossword_lvl" placeholder="Введите уровень кроссворда">

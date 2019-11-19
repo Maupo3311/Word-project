@@ -1,10 +1,16 @@
  <div class="row" id="words_for_generate">
+     <div class="button_panel">
+         <button class="btn btn-primary" id="open_crossword_menu" type="button">Меню кроссворда</button>
+     </div>
      {% for word in words %}
-         <div class="row_for_word">
-             <span class="row word_for_generate" data-word="{{ word.name }}">
+         <div class="row row_for_word">
+             <span class="row word_for_generate" data-position="h" data-word="{{ word.name }}">
                  {% for char in word.name|split('') %}
                      <span data-number="{{ loop.index0 }}" class="cell">{{ char }}</span>
                  {% endfor %}
+             </span>
+             <span data-flip-word="{{ word.name }}" class="flip-word">
+                 <i class="fas fa-sync-alt"></i>
              </span>
          </div>
      {% endfor %}

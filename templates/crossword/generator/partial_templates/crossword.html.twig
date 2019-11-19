@@ -1,8 +1,10 @@
 <div class="crossword">
+    {% set number = 0 %}
     {% for h in 0..height-1 %}
-        <div class="row">
+        <div data-row="{{ h }}" class="row">
             {% for w in 0..width-1 %}
-                <div class="place_for_cell"></div>
+                <div data-number="{{ number }}" class="place_for_cell"></div>
+                {% set number = number + 1 %}
             {% endfor %}
         </div>
     {% endfor %}
