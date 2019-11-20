@@ -139,6 +139,10 @@ class CrosswordGenerator {
         $(this.selectedWord).css('border-left', '4px solid black');
     };
 
+    saveCrossword = () => {
+        
+    };
+
     /******************************************
      *             Word methods
      *****************************************/
@@ -184,8 +188,6 @@ class CrosswordGenerator {
                     this.getCellContent(this.getTopCell(cell)) != '' ||
                     this.getCellContent(this.getBottomCell(cell)) != ''
                 ) {
-                    console.log('error');
-                    console.log(this.getCellContent(this.getLeftCell(cell)));
                     return 'You can\'t put that word in here';
                 }
             } else {
@@ -193,8 +195,6 @@ class CrosswordGenerator {
                     this.getCellContent(this.getLeftCell(cell)) != '' ||
                     this.getCellContent(this.getRightCell(cell)) != ''
                 ) {
-                    console.log('error');
-                    console.log(this.getCellContent(this.getLeftCell(cell)));
                     return 'You can\'t put that word in here';
                 }
             }
