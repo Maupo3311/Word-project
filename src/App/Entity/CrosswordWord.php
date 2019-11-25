@@ -18,7 +18,7 @@ class CrosswordWord
 
     /**
      * @var Crossword
-     * @ORM\OneToMany(targetEntity="Crossword", mappedBy="words")
+     * @ORM\ManyToOne(targetEntity="Crossword", inversedBy="words")
      */
     private $crossword;
 
@@ -51,11 +51,14 @@ class CrosswordWord
     }
 
     /**
-     * @param string $wordName
+     * @param string $wordName Word name.
+     * @return $this
      */
-    public function setWordName(string $wordName): void
+    public function setWordName(string $wordName): self
     {
         $this->wordName = $wordName;
+
+        return $this;
     }
 
     /**
@@ -67,11 +70,14 @@ class CrosswordWord
     }
 
     /**
-     * @param array $wordCells
+     * @param array $wordCells Crossword word cells.
+     * @return $this
      */
-    public function setWordCells(array $wordCells): void
+    public function setWordCells(array $wordCells): self
     {
         $this->wordCells = $wordCells;
+
+        return $this;
     }
 
     /**
@@ -83,10 +89,13 @@ class CrosswordWord
     }
 
     /**
-     * @param Crossword $crossword
+     * @param Crossword $crossword A crossword object.
+     * @return $this
      */
-    public function setCrossword(Crossword $crossword): void
+    public function setCrossword(Crossword $crossword): self
     {
         $this->crossword = $crossword;
+
+        return $this;
     }
 }

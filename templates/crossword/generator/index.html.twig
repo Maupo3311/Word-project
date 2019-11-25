@@ -41,11 +41,12 @@
                     <button type="submit" class="btn btn-primary">Расставить слова</button>
                 </form>
             </div>
+            <button class="btn btn-primary" id="save_crossword_button">Сохранить кроссворд</button>
         </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/crossword/CrosswordGenerator.js') }}"></script>
+    <script type="module" src="{{ asset('js/crossword/CrosswordGenerator.js') }}"></script>
 {% endblock %}

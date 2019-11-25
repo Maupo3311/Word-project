@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Игра{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/crossword/crossword.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div id="main_container" class="container">
+        <div class="row">
+            <div id="crossword">
+                <div id="additional_word_panel">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>0</span>
+                </div>
+                {% set number = 0 %}
+                {% for h in 0..crossword.height-1 %}
+                    <div data-row="{{ h }}" class="row">
+                        {% for w in 0..crossword.width-1 %}
+                            <div data-number="{{ number }}" class="cell"></div>
+                            {% set number = number + 1 %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="controller">
+                <div id="display"></div>
+                <div id="chars_for_enter" class="row">
+                    {% for char in crossword.chars|split('') %}
+                        <button data-char="{{ char }}" class="char_for_enter">{{ char }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/crossword/Crossword.js') }}"></script>
+    <script>
+        var crossword = new Crossword({{ crossword_info_in_array|json_encode|raw }});
+    </script>
+{% endblock %}

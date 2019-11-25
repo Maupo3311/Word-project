@@ -46,6 +46,11 @@ services:
       arguments: ['@doctrine.orm.default_entity_manager']
       public: true
 
+    app.crossword_service:
+        class: 'App\Service\CrosswordService'
+        arguments: ['@app.word_service']
+        public: true
+
     app.crossword_generator_service:
         class: 'App\Service\CrosswordGeneratorService'
         arguments: ['%kernel.project_dir%', '@doctrine.orm.default_entity_manager']

@@ -37,9 +37,15 @@ class Crossword
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToOne(targetEntity="CrosswordWord", inversedBy="crossword")
+     * @ORM\OneToMany(targetEntity="CrosswordWord", mappedBy="crossword")
      */
     private $words;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $chars;
 
     /**
      * @return int|null
@@ -58,11 +64,14 @@ class Crossword
     }
 
     /**
-     * @param int $lvl
+     * @param int $lvl Crossword level.
+     * @return $this
      */
-    public function setLvl(int $lvl): void
+    public function setLvl(int $lvl): self
     {
         $this->lvl = $lvl;
+
+        return $this;
     }
 
     /**
@@ -74,11 +83,14 @@ class Crossword
     }
 
     /**
-     * @param int $width
+     * @param int $width Crossword width.
+     * @return $this
      */
-    public function setWidth(int $width): void
+    public function setWidth(int $width): self
     {
         $this->width = $width;
+
+        return $this;
     }
 
     /**
@@ -90,17 +102,20 @@ class Crossword
     }
 
     /**
-     * @param int $height
+     * @param int $height Crossword height.
+     * @return $this
      */
-    public function setHeight(int $height): void
+    public function setHeight(int $height): self
     {
         $this->height = $height;
+
+        return $this;
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getWords(): ArrayCollection
+    public function getWords()
     {
         return $this->words;
     }
@@ -111,5 +126,60 @@ class Crossword
     public function setWords(ArrayCollection $words): void
     {
         $this->words = $words;
+    }
+
+    /**
+     * @param CrosswordWord $word A CrosswordWord object.
+     * @return $this
+     */
+    public function addWord(CrosswordWord $word): self
+    {
+        $this->words[] = $word;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChars(): string
+    {
+        return $this->chars;
+    }
+
+    /**
+     * @param string $chars Crossword chars.
+     * @return $this
+     */
+    public function setChars(string $chars): self
+    {
+        $this->chars = $chars;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInArray()
+    {
+        $inArray = [
+            'lvl'    => $this->lvl,
+            'width'  => $this->width,
+            'height' => $this->height,
+            'chars'  => $this->chars,
+            'words'  => [],
+        ];
+
+        /** @var CrosswordWord $word */
+        foreach ($this->words as $word) {
+            $inArray['words'][] = [
+                'wordName' => $word->getWordName(),
+                'cells'    => $word->getWordCells(),
+                'entered'  => false,
+            ];
+        }
+
+        return $inArray;
     }
 }

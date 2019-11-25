@@ -12,9 +12,6 @@ use Doctrine\ORM\EntityManager;
  */
 class WordService
 {
-    /** @var array */
-    protected $parameters;
-
     /** @var EntityManager */
     protected $manager;
 
@@ -25,10 +22,6 @@ class WordService
     public function __construct(EntityManager $manager)
     {
         $this->manager = $manager;
-
-        $this->parameters = [
-            'length' => false,
-        ];
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Controller\Crossword;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -12,5 +12,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CrosswordController extends AbstractCrosswordController
 {
+    /**
+     * @Route("/game", name="crossword_game")
+     * @return Response
+     */
+    public function game()
+    {
+        $crossword = $this->getCrosswordRepository()->find(1);
 
+        return $this->render('crossword/game.html.twig', [
+            'crossword'               => $crossword,
+            'crossword_info_in_array' => $this->getCrosswordService()->getCrosswordInfoInArray($crossword),
+        ]);
+    }
 }

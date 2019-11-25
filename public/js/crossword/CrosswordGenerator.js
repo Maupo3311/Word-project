@@ -1,3 +1,6 @@
+import * as Crossword from "./Crossword.js";
+import * as CrosswordWord from "./CrosswordWord.js";
+
 class CrosswordGenerator {
     /******************************************
      *               Selectors
@@ -16,6 +19,7 @@ class CrosswordGenerator {
     selectorFlipButton = '.flip-word';
     selectorButtonOpenWordOptions = '#open_word_menu';
     selectorButtonOpenCrosswordOptions = '#open_crossword_menu';
+    selectorSaveCrosswordButton = '#save_crossword_button';
 
     /******************************************
      *               Options
@@ -33,12 +37,17 @@ class CrosswordGenerator {
     selectedCell;
     selectedWord;
     errors = [];
+    words = [];
 
     constructor() {
         this.init();
     }
 
     init = () => {
+        $(document).on('click', this.selectorSaveCrosswordButton, e => {
+            this.saveCrossword();
+        });
+
         $(document).on('dblclick', '.used', e => {
             var cell = e.target;
             var wordName = cell.getAttribute('data-cell-word');
@@ -55,12 +64,12 @@ class CrosswordGenerator {
         });
 
         $(document).on('click', this.selectorFlipButton, e => {
-             var wordName = e.target.parentNode.getAttribute('data-flip-word');
-             if (wordName === null) {
-                 wordName = e.target.getAttribute('data-flip-word');
-             }
-             var word = this.getWordByName(wordName);
-             this.flipWord(word);
+            var wordName = e.target.parentNode.getAttribute('data-flip-word');
+            if (wordName === null) {
+                wordName = e.target.getAttribute('data-flip-word');
+            }
+            var word = this.getWordByName(wordName);
+            this.flipWord(word);
         });
 
         $(document).on('click', this.selectorPlaceForCell, e => {
@@ -139,10 +148,6 @@ class CrosswordGenerator {
         $(this.selectedWord).css('border-left', '4px solid black');
     };
 
-    saveCrossword = () => {
-        
-    };
-
     /******************************************
      *             Word methods
      *****************************************/
@@ -209,7 +214,7 @@ class CrosswordGenerator {
         var selectedWordName = this.selectedWord.getAttribute('data-word');
         var selectedWordLength = selectedWordName.length;
 
-        var cells  = [placeForCell];
+        var cells = [placeForCell];
         var currentCell = placeForCell;
 
         if (position === 'h') {
@@ -275,19 +280,48 @@ class CrosswordGenerator {
         word.parentNode.style.display = 'none';
     };
 
-    clearWordFromCrossword = wordName => {
-          var cellsInCrossword = $('[data-cell-word=' + wordName + ']');
-          for (var number = 0; number < cellsInCrossword.length; ++number) {
-              this.clearCellFromCrossword(cellsInCrossword[number]);
-          }
+    getCellsByWordName = wordName => {
+        for (var i = 0; i < this.words.length; ++i) {
+            var word = this.words[i];
+            if (word.wordName === wordName) {
+                return word.cells;
+            }
+        }
+    };
 
-          var wordRow = this.getWordByName(wordName).parentNode;
-          $(wordRow).css('display', '');
+    clearWordFromCrossword = wordName => {
+        if (wordName.split.length > 1) {
+            return;
+        }
+        var cellsInCrossword = this.getCellsByWordName(wordName);
+        for (var number = 0; number < cellsInCrossword.length; ++number) {
+            this.clearCellFromCrossword(cellsInCrossword[number]);
+        }
+
+        this.deleteWordInConfig(wordName);
+        var wordRow = this.getWordByName(wordName).parentNode;
+        $(wordRow).css('display', '');
     };
 
     clearCellFromCrossword = cell => {
         cell.classList.remove('used');
         $(cell).html('');
+    };
+
+    addWordInConfig = (wordName, cells) => {
+        this.words.push({
+            'wordName': wordName,
+            'cells': cells
+        })
+    };
+
+    deleteWordInConfig = (wordName) => {
+        for (var i = 0; i < this.words.length; ++i) {
+            var crosswordWord = this.words[i];
+            if (crosswordWord.wordName === wordName) {
+                delete this.words[i];
+            }
+        }
     };
 
     spreadTheWordOnCells = cells => {
@@ -305,9 +339,15 @@ class CrosswordGenerator {
             cell = cells[number];
             cell.innerHTML = wordName[number];
             cell.classList.add('used');
-            $(cell).attr('data-cell-word', wordName);
+            if (!$(cell).attr('data-cell-word')) {
+                $(cell).attr('data-cell-word', wordName);
+            } else {
+                var wordNames = $(cell).attr('data-cell-word') + ',' + wordName;
+                $(cell).attr('data-cell-word', wordNames);
+            }
             this.deleteWord(this.selectedWord);
         }
+        this.addWordInConfig(wordName, cells);
     };
 
     insertWord = placeForCell => {
@@ -318,7 +358,7 @@ class CrosswordGenerator {
         var cells = this.getCellsForWord(placeForCell);
         cells = this.sortCellsForWord(cells);
         this.spreadTheWordOnCells(cells);
-        this.deselectCell(this.selectedCell);
+        this.deselectCurrentCell();
 
         this.selectedWord = null;
         this.selectedCell = null;
@@ -327,6 +367,11 @@ class CrosswordGenerator {
     /******************************************
      *          Navigation methods
      *****************************************/
+    getCellWordNames = cell => {
+        var wordNames = $(cell).attr('data-cell-word');
+        return wordNames.split(' ');
+    };
+
     getCellContent = cell => {
         if (cell === undefined || cell === null) {
             return null;
@@ -362,7 +407,7 @@ class CrosswordGenerator {
         var rightCellNumber = this.getCellNumber(cell) + 1;
         var rightCell = this.getCell(rightCellNumber);
 
-        if (rightCell === null|| rightCellNumber > this.placeQuantity || this.getRowNumber(cell) !== this.getRowNumber(rightCell)) {
+        if (rightCell === null || rightCellNumber > this.placeQuantity || this.getRowNumber(cell) !== this.getRowNumber(rightCell)) {
             return null;
         }
 
@@ -373,7 +418,7 @@ class CrosswordGenerator {
         var topCellNumber = this.getCellNumber(cell) - +this.width;
         var topCell = this.getCell(topCellNumber);
 
-        if (topCell === null || topCellNumber < 0 ) {
+        if (topCell === null || topCellNumber < 0) {
             return null;
         }
 
@@ -384,11 +429,43 @@ class CrosswordGenerator {
         var BottomCellNumber = this.getCellNumber(cell) + +this.width;
         var BottomCell = this.getCell(BottomCellNumber);
 
-        if (BottomCell === null || BottomCellNumber > this.placeQuantity ) {
+        if (BottomCell === null || BottomCellNumber > this.placeQuantity) {
             return null;
         }
 
         return BottomCell;
+    };
+
+    /******************************************
+     *           Global methods
+     *****************************************/
+
+    saveCrossword = () => {
+        var words = [];
+        for (var i = 0; i < this.words.length; ++i) {
+            var word = this.words[i];
+            var cells = [];
+            for (var x = 0; x < word.cells.length; ++x) {
+                cells.push(this.getCellNumber(word.cells[x]));
+            }
+
+            words.push({
+               'wordName': word.wordName,
+               'cells': cells,
+            });
+        }
+
+        $.post(Routing.generate('api_save_crossword'), {
+            'crossword': {
+                'words': words,
+                'lvl': this.lvl,
+                'width': this.width,
+                'height': this.height,
+                'chars': this.chars
+            }
+        }).done(response => {
+            console.log(response);
+        })
     };
 }
 
