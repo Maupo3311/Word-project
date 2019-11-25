@@ -101,8 +101,8 @@ class Crossword {
         return $('[data-number=' + number + ']')[0]
     };
 
-    getCharElement = char => {
-        return $('[data-char=' + char + ']')[0];
+    getCharElement = (char, index = 0) => {
+        return $('[data-char=' + char + ']')[index];
     };
 
     selectChar = char => {
@@ -110,7 +110,7 @@ class Crossword {
         if (charIndex === -1) {
             return null
         }
-        var charElement = this.getCharElement(char);
+        var charElement = this.getCharElement(char, this.getQuantityChars(this.enteredChars, char));
         delete this.notEnteredChars[charIndex];
         this.enteredChars.push(char);
         charElement.style.display = 'none';
@@ -133,11 +133,27 @@ class Crossword {
     backspaceDisplay = () => {
         var content = $(this.selectorDisplay).html();
         var lastChar = content[content.length - 1];
-        var lastCharElement = this.getCharElement(lastChar);
+        var lastCharElement = this.getCharElement(lastChar, this.getQuantityChars(this.notEnteredChars, lastChar));
         $(lastCharElement).css('display', 'block');
         $(this.selectorDisplay).html(content.substring(0, content.length - 1));
         this.notEnteredChars.push(lastChar);
         delete this.enteredChars[this.enteredChars.indexOf(lastChar)];
+    };
+
+    getQuantityChars = (array, char) => {
+        var quantity = 0;
+        var index = 0;
+        for (var i = 0; i < 10; ++i) {
+            index = array.indexOf(char, index);
+            if (index !== -1) {
+                ++quantity;
+                ++index;
+            } else {
+                return quantity;
+            }
+        }
+
+        return quantity;
     };
 
     isWin = () => {
