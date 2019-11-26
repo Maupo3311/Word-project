@@ -33,36 +33,32 @@ class CrosswordService
         $charsInArray = $this->wordService->getWordInArray($crossword->getChars());
         $allWord      = $this->wordService->getWordByChars($charsInArray);
 
-        $inCrossword    = [];
-        $notInCrossword = [];
+        $words = [];
+        $wordsInCrossword = 0;
         /** @var Word $word */
         foreach ($allWord as $word) {
-            $isInCrossword = false;
+            $lastCrosswordWord = null;
             /** @var CrosswordWord $crosswordWord */
             foreach ($crossword->getWords() as $crosswordWord) {
                 if ($crosswordWord->getWordName() === $word->getName()) {
-                    $isInCrossword = true;
-                    continue;
+                    $lastCrosswordWord = $crosswordWord;
+                    $wordsInCrossword++;
+                    break;
                 }
             }
 
-            $wordInArray = [
+            $words[] =  [
                 'wordName'    => $word->getName(),
                 'description' => $word->getDescription(),
                 'entered'     => false,
+                'inCrossword' => $lastCrosswordWord !== null ? true : false,
+                'cells'       => $lastCrosswordWord === null ?: $lastCrosswordWord->getWordCells(),
             ];
-            if ($isInCrossword) {
-                $inCrossword[] = $wordInArray;
-            } else {
-                $notInCrossword[] = $wordInArray;
-            }
         }
 
         $crosswordInArray = $crossword->getInArray();
-        $crosswordInArray['words_info'] = [
-            'in'     => $inCrossword,
-            'not_in' => $notInCrossword,
-        ];
+        $crosswordInArray['words'] = $words;
+        $crosswordInArray['wordsInCrossword'] = $wordsInCrossword;
 
         return $crosswordInArray;
     }

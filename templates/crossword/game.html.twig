@@ -5,16 +5,25 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/crossword/crossword.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/crossword/crosswordAnimated.css') }}">
 {% endblock %}
 
-{% block content %}
+{% block body %}
+    <a href="{{ path('homepage') }}">
+        <div id="go_back"><i class="fas fa-arrow-alt-circle-left"></i></div>
+    </a>
     <div id="main_container" class="container">
+        <div id="widgets">
+            <div data-toggle="modal" data-target="#additional_words_modal" id="additional_word_panel">
+                <i class="fas fa-plus-circle"></i>
+                <span id="counter_not_in_crossword_word">0</span>
+            </div>
+            <div id="main_word_panel">
+                <span id="counter_in_crossword_word">0</span>/{{ crossword_info_in_array['wordsInCrossword'] }}
+            </div>
+        </div>
         <div class="row">
             <div id="crossword">
-                <div id="additional_word_panel">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>0</span>
-                </div>
                 {% set number = 0 %}
                 {% for h in 0..crossword.height-1 %}
                     <div data-row="{{ h }}" class="row">
@@ -34,6 +43,21 @@
                 </div>
                 <div id="log_window">
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="additional_words_modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Дополнительные слова</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="additional_words">
                 </div>
             </div>
         </div>

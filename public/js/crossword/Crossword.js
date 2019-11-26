@@ -54,9 +54,14 @@ export default class Crossword {
         }
     };
 
+    updateCounters = () => {
+        $(Selector.counterInCrosswordWord).html(Word.counterEnteredWordInCrossword);
+        $(Selector.counterNotInCrosswordWord).html(Word.counterEnteredWordNotInCrossword);
+    };
+
     isWin = () => {
-        console.log(Word.enteredWord.length + ' / ' + this.crossword.words.length);
-        if (Word.enteredWord.length === this.crossword.words.length) {
+        if (Word.counterEnteredWordInCrossword === this.crossword['wordsInCrossword']) {
+            alert('Вы победили! *Салютик*');
             return true;
         }
 

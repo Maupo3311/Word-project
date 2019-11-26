@@ -18,7 +18,7 @@ class CrosswordController extends AbstractCrosswordController
      */
     public function game()
     {
-        $crossword = $this->getCrosswordRepository()->find(1);
+        $crossword = $this->getCrosswordRepository()->find(2);
 
         return $this->render('crossword/game.html.twig', [
             'crossword'               => $crossword,

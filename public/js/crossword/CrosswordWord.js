@@ -1,31 +1,21 @@
 import Cell from "./CrosswordCell.js";
 import Selector from "./CrosswordSelectors.js";
 import Char from "./CrosswordChar.js";
+import Animated from "./CrosswordAnimated.js";
 
 class CrosswordWord {
 
     CrosswordObject = {};
 
     enteredWord = [];
+    counterEnteredWordInCrossword = 0;
+    counterEnteredWordNotInCrossword = 0;
 
-    notInCrossword = word => {
-        for (var i = 0; i < this.CrosswordObject.crossword['words_info']['not_in'].length; ++i) {
-            var notInWord = this.CrosswordObject.crossword['words_info']['not_in'][i];
-            if (notInWord['wordName'] === word && !notInWord.entered) {
-                return notInWord;
-            }
-        }
-
-        return null;
-    };
-
-    inCrossword = word => {
+    getWordObject = word => {
         for (var i = 0; i < this.CrosswordObject.crossword.words.length; ++i) {
-            var crosswordWord = this.CrosswordObject.crossword.words[i];
-            if (word === crosswordWord.wordName && !crosswordWord.entered) {
-                this.enteredWord.push(word);
-                this.CrosswordObject.crossword.words[i].entered = true;
-                return crosswordWord;
+            var wordObject = this.CrosswordObject.crossword.words[i];
+            if (wordObject.wordName === word) {
+                return wordObject;
             }
         }
 
@@ -33,18 +23,43 @@ class CrosswordWord {
     };
 
     enterWord = word => {
-        var crosswordWord = this.inCrossword(word);
-        var notInCrosswordWord = this.notInCrossword(word);
-        if (crosswordWord !== null) {
-            for (var i = 0; i < crosswordWord.cells.length; ++i) {
-                var cell = crosswordWord.cells[i];
+        var wordObject = this.getWordObject(word);
+        if (wordObject === null || wordObject.entered) {
+            return;
+        } else if (wordObject.inCrossword) {
+            for (var i = 0; i < wordObject.cells.length; ++i) {
+                var cell = wordObject.cells[i];
                 cell.classList.remove('not_guessed');
             }
 
+            this.counterEnteredWordInCrossword++;
+            // Animated.animateInsertWord(wordObject);
+            this.addLogAboutWord(wordObject);
             this.CrosswordObject.isWin();
-        } else if (notInCrosswordWord !== null) {
-            console.log(notInCrosswordWord);
+        } else if (!wordObject.inCrossword) {
+            this.counterEnteredWordNotInCrossword++;
+            this.addAdditionalWords(wordObject);
         }
+        wordObject.entered = true;
+        this.CrosswordObject.updateCounters();
+    };
+
+    addAdditionalWords = wordObject => {
+        var html = '' +
+            '<div>' +
+            '<b>' + wordObject.wordName + '</b> - ' + wordObject.description +
+            '</div>';
+        $(Selector.additionalWords).append(html);
+    };
+
+    addLogAboutWord = wordObject => {
+        var logWindow = $(Selector.logWindow);
+        var html = '' +
+            '<div>' +
+            '<b>' + wordObject.wordName + '</b> - ' + wordObject.description +
+            '</div>';
+        $(logWindow).append(html);
+        logWindow.scrollTop(logWindow.prop('scrollHeight'));
     };
 }
 

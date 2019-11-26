@@ -7,13 +7,11 @@ class CrosswordChar {
     CrosswordObject = {};
 
     chars = [];
-    enteredChars = [];
-    notEnteredChars = [];
 
     syncButtons = chars => {
-        this.notEnteredChars = chars.split('');
-        for (var i = 0; i < this.notEnteredChars.length; ++i) {
-            var char = this.notEnteredChars[i];
+        var charsInArray = chars.split('');
+        for (var i = 0; i < charsInArray.length; ++i) {
+            var char = charsInArray[i];
             var charElement;
             for (var x = 0; x < 5; ++x) {
                 charElement = this.getCharElement(char, x);
@@ -45,22 +43,21 @@ class CrosswordChar {
     };
 
     selectChar = char => {
-        var charIndex = this.notEnteredChars.indexOf(char);
-        if (charIndex === -1) {
-            return null
+        var charObject = this.getCharObject(char, false);
+        if (charObject === null) {
+            return;
         }
-        var charElement = this.getCharElement(char, this.getQuantityChars(this.enteredChars, char));
-        delete this.notEnteredChars[charIndex];
-        this.enteredChars.push(char);
-        charElement.style.display = 'none';
+        charObject.used = true;
+        charObject.element.style.display = 'none';
         this.addCharInDisplay(char);
     };
 
     clearDisplay = () => {
         $(Selector.chars).css('display', 'block');
         $(Selector.display).html('');
-        this.enteredChars = [];
-        this.notEnteredChars = this.CrosswordObject.crossword.chars.split('');
+        for (var i = 0; i < this.chars.length; ++i) {
+            this.chars[i].used = false;
+        }
     };
 
     addCharInDisplay = char => {
@@ -72,29 +69,13 @@ class CrosswordChar {
     backspaceDisplay = () => {
         var content = $(Selector.display).html();
         var lastChar = content[content.length - 1];
-        var index = this.getQuantityChars(this.notEnteredChars, lastChar);
-        console.log(index);
-        var lastCharElement = this.getCharElement(lastChar, index);
-        $(lastCharElement).css('display', 'block');
-        $(Selector.display).html(content.substring(0, content.length - 1));
-        this.notEnteredChars.push(lastChar);
-        delete this.enteredChars[this.enteredChars.indexOf(lastChar)];
-    };
-
-    getQuantityChars = (array, char) => {
-        var quantity = 0;
-        var index = 0;
-        for (var i = 0; i < 10; ++i) {
-            index = array.indexOf(char, index);
-            if (index !== -1) {
-                ++quantity;
-                ++index;
-            } else {
-                return quantity;
-            }
+        var charsObject = this.getCharObject(lastChar, true);
+        if (charsObject === null) {
+            return;
         }
-
-        return quantity;
+        charsObject.used = false;
+        $(charsObject.element).css('display', 'block');
+        $(Selector.display).html(content.substring(0, content.length - 1));
     };
 }
 
