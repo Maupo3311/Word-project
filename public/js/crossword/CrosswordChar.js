@@ -35,7 +35,7 @@ class CrosswordChar {
             if (this.chars[i].char === char && this.chars[i].used === used) {
                 return this.chars[i];
             }
-        }  
+        }
 
         return null;
     };
