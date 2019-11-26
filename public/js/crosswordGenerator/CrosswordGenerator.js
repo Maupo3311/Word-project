@@ -1,5 +1,5 @@
-import * as Crossword from "./Crossword.js";
-import * as CrosswordWord from "./CrosswordWord.js";
+import * as Crossword from "../crossword/Crossword.js";
+import * as CrosswordWord from "../crossword/CrosswordWord.js";
 
 class CrosswordGenerator {
     /******************************************

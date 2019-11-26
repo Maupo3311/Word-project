@@ -42,8 +42,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/crossword/Crossword.js') }}"></script>
     <script>
-        var crossword = new Crossword({{ crossword_info_in_array|json_encode|raw }});
+        var crosswordInfo = {{ crossword_info_in_array|json_encode|raw }};
     </script>
+    <script type="module" src="{{ asset('app/Game.js') }}"></script>
 {% endblock %}
